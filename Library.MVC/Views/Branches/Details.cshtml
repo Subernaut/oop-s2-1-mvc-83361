@@ -1,0 +1,53 @@
+﻿@model Library.Domain.Branch
+
+@{
+    ViewData["Title"] = "Branch Details";
+}
+
+<h1>Branch Details</h1>
+
+<div>
+    <h4>Branch</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Courses in this Branch</h4>
+    @if (Model.Courses != null && Model.Courses.Any())
+    {
+        <ul>
+            @foreach (var course in Model.Courses)
+            {
+                <li>
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.Id">
+                        @course.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No courses available for this branch.</p>
+    }
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit Branch</a> |
+    <a asp-action="Index">Back to Branch List</a>
+</div>

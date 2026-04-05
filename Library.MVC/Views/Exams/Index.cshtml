@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Library.Domain.Exam>
+
+@{
+    ViewData["Title"] = "Index";
+    bool isAdmin = User.IsInRole("Admin");
+    bool isStudent = User.IsInRole("Student");
+}
+
+<h1>Exams</h1>
+
+@if (isAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New Exam</a>
+    </p>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Course)</th>
+            <th>@Html.DisplayNameFor(model => model.Date)</th>
+            <th>@Html.DisplayNameFor(model => model.MaxScore)</th>
+            <th>@Html.DisplayNameFor(model => model.ResultsReleased)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => exam.Title)</td>
+                <td>@Html.DisplayFor(modelItem => exam.Course.Name)</td>
+                <td>@Html.DisplayFor(modelItem => exam.Date)</td>
+                <td>@Html.DisplayFor(modelItem => exam.MaxScore)</td>
+                <td>@Html.DisplayFor(modelItem => exam.ResultsReleased)</td>
+                <td>
+                    @* Students and Faculty can only view details *@
+                    @if (isStudent)
+                    {
+                        <a asp-action="Details" asp-route-id="@exam.Id" class="btn btn-sm btn-info">Details</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@exam.Id" class="btn btn-sm btn-info">Details</a>
+                    }
+
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@exam.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@exam.Id" class="btn btn-sm btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,10 @@
+﻿@model Library.MVC.Models.StatusCodeViewModel
+
+@{
+    ViewData["Title"] = $"Error {Model.StatusCode}";
+}
+
+<h1 class="text-warning">Error @Model.StatusCode</h1>
+<p>@Model.Message</p>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back to Home</a>

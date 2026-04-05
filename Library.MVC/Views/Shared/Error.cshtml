@@ -1,0 +1,18 @@
+﻿@model Library.MVC.Models.ErrorViewModel
+
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Something went wrong.</h1>
+<p>We're sorry, an unexpected error occurred. Please try again later.</p>
+
+@if (!string.IsNullOrEmpty(Model.RequestId))
+{
+    <p>
+        <strong>Request ID:</strong> @Model.RequestId <br />
+        You can provide this ID to support for troubleshooting.
+    </p>
+}
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back to Home</a>

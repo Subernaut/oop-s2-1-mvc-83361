@@ -1,0 +1,116 @@
+﻿@model Library.Domain.Course
+
+@{
+    ViewData["Title"] = "Course Details";
+
+    var role = User.IsInRole("Admin") ? "Admin"
+             : User.IsInRole("Faculty") ? "Faculty"
+             : "Student";
+
+    var studentCount = Model.Enrolments?.Count ?? 0;
+}
+
+<h1>Course Details</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <h4 class="mb-3">@Model.Name</h4>
+        <hr />
+
+        <dl class="row">
+
+            <!-- Branch -->
+            <dt class="col-sm-2">Branch</dt>
+            <dd class="col-sm-10">
+                @Model.Branch?.Name
+            </dd>
+
+            <!-- Faculty -->
+            <dt class="col-sm-2">Faculty</dt>
+            <dd class="col-sm-10">
+                @Model.Faculty?.Name
+            </dd>
+
+            <!-- Student Count -->
+            <dt class="col-sm-2">Students</dt>
+            <dd class="col-sm-10">
+                <span class="badge bg-info">
+                    @studentCount student(s)
+                </span>
+            </dd>
+
+            <!-- Dates -->
+            <dt class="col-sm-2">Start Date</dt>
+            <dd class="col-sm-10">
+                @Model.StartDate.ToShortDateString()
+            </dd>
+
+            <dt class="col-sm-2">End Date</dt>
+            <dd class="col-sm-10">
+                @Model.EndDate.ToShortDateString()
+            </dd>
+
+        </dl>
+    </div>
+</div>
+
+<!-- STUDENT LIST -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5>Enrolled Students</h5>
+
+        @if (Model.Enrolments != null && Model.Enrolments.Any())
+        {
+            <ul class="list-group">
+                @foreach (var enrol in Model.Enrolments)
+                {
+                    var student = enrol.StudentProfile;
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                            @student?.Name
+                        </span>
+
+                        <div>
+                            @if (student != null)
+                            {
+                                <a asp-controller="StudentProfiles"
+                                   asp-action="Details"
+                                   asp-route-id="@student.Id"
+                                   class="btn btn-sm btn-outline-primary me-1">
+                                    View Profile
+                                </a>
+                            }
+
+                            <a asp-controller="CourseEnrolments"
+                               asp-action="Details"
+                               asp-route-id="@enrol.Id"
+                               class="btn btn-sm btn-outline-secondary">
+                                View Enrolment
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">No students enrolled in this course.</p>
+        }
+    </div>
+</div>
+
+<!-- ACTIONS -->
+<div class="mt-3">
+    @if (role == "Admin")
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+            Edit
+        </a>
+    }
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back to List
+    </a>
+</div>

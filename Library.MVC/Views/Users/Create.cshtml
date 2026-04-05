@@ -1,0 +1,81 @@
+﻿@model Library.MVC.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h1 class="mb-4"><i class="bi bi-person-plus-fill"></i> Create User</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter user email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label"><i class="bi bi-key"></i> Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter password" />
+            </div>
+
+            <!-- Role -->
+            <div class="mb-3">
+                <label class="form-label"><i class="bi bi-person-badge"></i> Role</label>
+                <select name="role" class="form-select">
+                    <option value="Admin">Admin</option>
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                </select>
+            </div>
+
+            <!-- Student Profile -->
+            <div class="mb-3 border rounded p-3 bg-light" id="studentProfileFields" style="display:none;">
+                <h5><i class="bi bi-mortarboard"></i> Student Profile (Optional)</h5>
+                <div class="mb-2">
+                    <label class="form-label">Student Number</label>
+                    <input type="text" name="studentProfile.StudentNumber" class="form-control" placeholder="Enter student number" />
+                </div>
+            </div>
+
+            <!-- Faculty Profile -->
+            <div class="mb-3 border rounded p-3 bg-light" id="facultyProfileFields" style="display:none;">
+                <h5><i class="bi bi-building"></i> Faculty Profile (Optional)</h5>
+                <div class="mb-2">
+                    <label class="form-label">Department</label>
+                    <input type="text" name="facultyProfile.Department" class="form-control" placeholder="Enter department" />
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex gap-2 mt-3">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const roleSelect = document.querySelector('select[name="role"]');
+        const studentFields = document.getElementById('studentProfileFields');
+        const facultyFields = document.getElementById('facultyProfileFields');
+
+        roleSelect.addEventListener('change', () => {
+            studentFields.style.display = roleSelect.value === 'Student' ? 'block' : 'none';
+            facultyFields.style.display = roleSelect.value === 'Faculty' ? 'block' : 'none';
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <!-- Optional: Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}

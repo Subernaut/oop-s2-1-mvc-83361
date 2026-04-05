@@ -1,0 +1,89 @@
+﻿@model Library.Domain.Assignment
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="mb-4">📄 Assignment Details</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Assignment Info</h4>
+        <hr />
+
+        <dl class="row">
+            <dt class="col-sm-3">Course</dt>
+            <dd class="col-sm-9">
+                @Model.Course?.Name
+            </dd>
+
+            <dt class="col-sm-3">Title</dt>
+            <dd class="col-sm-9">
+                @Model.Title
+            </dd>
+
+            <dt class="col-sm-3">Max Score</dt>
+            <dd class="col-sm-9">
+                @Model.MaxScore
+            </dd>
+
+            <dt class="col-sm-3">Due Date</dt>
+            <dd class="col-sm-9">
+                @Model.DueDate.ToString("dd MMM yyyy")
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<!-- ===================== RESULTS SECTION ===================== -->
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">📊 Assignment Results</h4>
+        <hr />
+
+        @if (Model.AssignmentResults != null && Model.AssignmentResults.Any())
+        {
+            <ul class="list-group">
+                @foreach (var result in Model.AssignmentResults)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Student ID:</strong> @result.StudentProfileId <br />
+                            <strong>Score:</strong> @result.Score
+                        </div>
+
+                        <a asp-controller="AssignmentResults"
+                           asp-action="Details"
+                           asp-route-id="@result.Id"
+                           class="btn btn-sm btn-outline-primary">
+                            View
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="text-muted">
+                No results available for this assignment.
+            </div>
+        }
+    </div>
+</div>
+
+<!-- ===================== ACTIONS ===================== -->
+
+<div class="d-flex justify-content-between">
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+            ✏️ Edit
+        </a>
+    </div>
+
+    <div>
+        <a asp-action="Index" class="btn btn-secondary">
+            ⬅ Back to List
+        </a>
+    </div>
+</div>

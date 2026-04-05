@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Library.MVC.Models.UserViewModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="container mt-4">
+
+    <!-- Top bar: title, filter, create button -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <!-- Title -->
+        <h1 class="mb-0"><i class="bi bi-people-fill"></i> Users</h1>
+
+        <!-- Center: Role Filter -->
+        <div class="d-flex justify-content-center flex-grow-1 my-2">
+            <label class="form-label fw-bold me-2 mb-0 align-self-center">Filter by Role:</label>
+            <div class="btn-group" role="group" id="roleFilter">
+                @foreach (var role in new[] { "Admin", "Student", "Faculty" })
+                {
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-role="@role">
+                        @role
+                    </button>
+                }
+            </div>
+        </div>
+
+        <!-- Create button -->
+        <div class="text-end my-2">
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle"></i> Create New User
+            </a>
+        </div>
+    </div>
+
+    <!-- Users table -->
+    <table class="table table-hover table-bordered shadow-sm mx-auto" style="width:95%;" id="usersTable">
+        <thead class="table-dark">
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Profile</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-role="@item.Role">
+                    <td>@item.Email</td>
+                    <td>
+                        <span class="badge bg-primary">@item.Role</span>
+                    </td>
+                    <td>
+                        @if (item.HasProfile)
+                        {
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Linked</span>
+                        }
+                        else if (item.Role == "Student")
+                        {
+                            <a asp-controller="StudentProfiles" asp-action="Create" asp-route-userId="@item.Id" class="btn btn-sm btn-warning">
+                                <i class="bi bi-person-plus"></i> Add Profile
+                            </a>
+                        }
+                        else if (item.Role == "Faculty")
+                        {
+                            <a asp-controller="FacultyProfiles" asp-action="Create" asp-route-userId="@item.Id" class="btn btn-sm btn-warning">
+                                <i class="bi bi-person-plus"></i> Add Profile
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info me-1">
+                            <i class="bi bi-eye"></i> Details
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <script>
+        const roleButtons = document.querySelectorAll('#roleFilter button');
+        const tableRows = document.querySelectorAll('#usersTable tbody tr');
+        let selectedRoles = new Set();
+
+        function updateFilter() {
+            tableRows.forEach(row => {
+                const role = row.dataset.role;
+                row.style.display = selectedRoles.size === 0 || selectedRoles.has(role) ? '' : 'none';
+            });
+        }
+
+        roleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const role = btn.dataset.role;
+                if (selectedRoles.has(role)) {
+                    selectedRoles.delete(role);
+                    btn.classList.remove('active');
+                } else {
+                    selectedRoles.add(role);
+                    btn.classList.add('active');
+                }
+                updateFilter();
+            });
+        });
+    </script>
+}

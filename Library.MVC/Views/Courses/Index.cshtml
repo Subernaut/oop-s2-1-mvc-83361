@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Library.Domain.Course>
+
+@{
+    ViewData["Title"] = "Courses";
+    var role = User.IsInRole("Admin") ? "Admin"
+             : User.IsInRole("Faculty") ? "Faculty"
+             : "Student";
+}
+
+<h1>Courses</h1>
+
+@if (role == "Admin")
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">Create New Course</a>
+    </p>
+}
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Course</th>
+            <th>Branch</th>
+            <th>Faculty</th>
+            <th>Students</th>
+            <th>Start</th>
+            <th>End</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var studentCount = item.Enrolments?.Count ?? 0;
+
+            <tr>
+                <!-- Course Name -->
+                <td class="fw-semibold">
+                    @item.Name
+                </td>
+
+                <!-- Branch Name -->
+                <td>
+                    @(item.Branch?.Name ?? "N/A")
+                </td>
+
+                <!-- Faculty Name -->
+                <td>
+                    @(item.Faculty?.Name ?? "N/A")
+                </td>
+
+                <!-- Student Count -->
+                <td>
+                    <span class="badge bg-info">
+                        @studentCount student(s)
+                    </span>
+                </td>
+
+                <!-- Dates -->
+                <td>
+                    @item.StartDate.ToShortDateString()
+                </td>
+                <td>
+                    @item.EndDate.ToShortDateString()
+                </td>
+
+                <!-- Actions -->
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                        Details
+                    </a>
+
+                    @if (role == "Admin")
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                            Edit
+                        </a>
+
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

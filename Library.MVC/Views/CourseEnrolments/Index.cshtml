@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Library.Domain.CourseEnrolment>
+
+@{
+    ViewData["Title"] = "Index";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<h1>Course Enrolments</h1>
+
+@if (isAdmin)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Student
+            </th>
+            <th>
+                Course
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnrolDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="StudentProfiles" asp-action="Details" asp-route-id="@item.StudentProfileId">
+                        @Html.DisplayFor(modelItem => item.StudentProfile.Name)
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@item.CourseId">
+                        @Html.DisplayFor(modelItem => item.Course.Name)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EnrolDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span>|</span>
+                        <a asp-action= "Details" asp - route - id = "@item.Id" > Details </a > <span>|</span>
+                        <a asp-action= "Delete" asp - route - id = "@item.Id" > Delete </a >
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

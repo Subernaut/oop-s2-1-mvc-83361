@@ -1,0 +1,56 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Delete User";
+    var user = Model.User;
+    var roles = Model.Roles as IEnumerable<string> ?? new string[] { };
+    var profile = Model.Profile;
+}
+
+<h1 class="mb-4 text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Delete User</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Are you sure you want to delete this user?</h5>
+        <hr />
+
+        <dl class="row mb-4">
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@user.Email</dd>
+
+            <dt class="col-sm-3">Role</dt>
+            <dd class="col-sm-9">@string.Join(", ", roles)</dd>
+
+            <dt class="col-sm-3">Profile</dt>
+            <dd class="col-sm-9">
+                @if (roles.Contains("Student") && profile == null)
+                {
+                    <span class="badge bg-warning text-dark">No Student Profile</span>
+                }
+                else if (roles.Contains("Faculty") && profile == null)
+                {
+                    <span class="badge bg-warning text-dark">No Faculty Profile</span>
+                }
+                else if (profile != null)
+                {
+                    <span class="badge bg-success">Linked</span>
+                }
+                else
+                {
+                    <span>-</span>
+                }
+            </dd>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="d-flex gap-2">
+            <input type="hidden" name="id" value="@user.Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Optional: Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}

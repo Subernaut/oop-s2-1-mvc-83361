@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Library.Domain.AttendanceRecord>
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Attendance Records";
+
+    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var isStudent = User.IsInRole("Student");
+    var isFaculty = User.IsInRole("Faculty");
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<h1>Attendance Records</h1>
+
+@if (isFaculty || isAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Student</th>
+            <th>Date</th>
+            <th>Present</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@item.CourseEnrolment.CourseId">
+                        @item.CourseEnrolment.Course.Name
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="StudentProfiles" asp-action="Details" asp-route-id="@item.CourseEnrolment.StudentProfileId">
+                        @item.CourseEnrolment.StudentProfile.Name
+                    </a>
+                </td>
+                <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                <td>@(item.Present ? "Present" : "Absent")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (!isStudent)
+                    {
+                        <text> | <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> @if (isAdmin)
+                            {
+                                <span>|</span> <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            }</text>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

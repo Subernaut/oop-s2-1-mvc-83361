@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Library.Domain.StudentProfile>
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+    var currentUser = UserManager.GetUserAsync(User).Result;
+    var isAdmin = User.IsInRole("Admin");
+    var isFaculty = User.IsInRole("Faculty");
+}
+
+<h1>Student Profiles</h1>
+
+@if (isAdmin)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            @if (isAdmin)
+            {
+                <th>@Html.DisplayNameFor(model => model.First().Student.Id)</th>
+            }
+            <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+            @if (isAdmin)
+            {
+                <th>@Html.DisplayNameFor(model => model.First().Phone)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Address)</th>
+            }
+            <th>@Html.DisplayNameFor(model => model.First().StudentNumber)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (isAdmin)
+                {
+                    <td>@Html.DisplayFor(modelItem => item.Student.Id)</td>
+                }
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                @if (isAdmin)
+                {
+                    <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                }
+                <td>@Html.DisplayFor(modelItem => item.StudentNumber)</td>
+                <td>
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span>|</span>
+                    <a asp-action= "Details" asp-route-id = "@item.Id" > Details </a> <span>|</span>
+                    <a asp-action = "Delete" asp-route-id = "@item.Id"> Delete </a>
+                    }
+                    else if (isFaculty)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

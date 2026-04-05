@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Library.Domain.Branch>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Branches</h1>
+
+<p>
+    <a asp-action="Create">Create New Branch</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                Number of Courses
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var branch in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => branch.Name)</td>
+                <td>@Html.DisplayFor(modelItem => branch.Address)</td>
+                <td>@branch.Courses.Count</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@branch.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@branch.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@branch.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

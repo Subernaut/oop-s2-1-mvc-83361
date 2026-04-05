@@ -1,0 +1,165 @@
+﻿@model IEnumerable<Library.Domain.Assignment>
+
+@{
+    ViewData["Title"] = "Assignments";
+
+    var role = ViewData["Role"] as string ?? "Unknown";
+    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            <i class="bi bi-journal-text"></i> Assignments
+        </h2>
+
+        @if (role == "Admin" || role == "Faculty")
+        {
+            <a asp-action="Create" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Create Assignment
+            </a>
+        }
+    </div>
+
+    <!-- TABLE -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0 text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Course</th>
+                        <th>Title</th>
+                        <th>Max Score</th>
+                        <th>Due Date</th>
+                        <th>Result</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // Get all results for this assignment
+                        var assignmentResults = item.AssignmentResults?.ToList() ?? new List<Library.Domain.AssignmentResult>();
+
+                        // Student-specific result (if any)
+                        Library.Domain.AssignmentResult myResult = null;
+                        if (role == "Student")
+                        {
+                            myResult = assignmentResults
+                            .FirstOrDefault(r =>
+                            r.StudentProfile != null &&
+                            r.StudentProfile.IdentityUserId == userId);
+                        }
+
+                        var hasResult = assignmentResults.Any();
+                        var isOverdue = item.DueDate < DateTime.Now;
+                        var canAddResult = (role == "Admin" || role == "Faculty")
+                        && isOverdue
+                        && !hasResult;
+
+                        <tr>
+                            <!-- COURSE -->
+                            <td>
+                                <span class="fw-semibold">@item.Course?.Name</span>
+                            </td>
+
+                            <!-- TITLE -->
+                            <td>@item.Title</td>
+
+                            <!-- MAX SCORE -->
+                            <td>
+                                <span class="badge bg-primary">@item.MaxScore</span>
+                            </td>
+
+                            <!-- DUE DATE -->
+                            <td>
+                                @if (isOverdue)
+                                {
+                                    <span class="badge bg-danger">@item.DueDate.ToShortDateString()</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@item.DueDate.ToShortDateString()</span>
+                                }
+                            </td>
+
+                            <!-- RESULT -->
+                            <td>
+                                @if (role == "Student")
+                                {
+                                    if (myResult != null)
+                                    {
+                                        <span class="badge bg-success">Score: @myResult.Score</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No result</span>
+                                    }
+                                }
+                                else
+                                {
+                                    if (hasResult)
+                                    {
+                                        <span class="badge bg-info">@assignmentResults.Count result(s)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No results</span>
+                                    }
+                                }
+                            </td>
+
+                            <!-- ACTIONS -->
+                            <td>
+                                <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                    @if (role == "Student" && myResult != null)
+                                    {
+                                        <!-- Student goes to their result's details -->
+                                        <a asp-controller="AssignmentResults"
+                                           asp-action="Details"
+                                           asp-route-id="@myResult.Id"
+                                           class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <!-- Admin/Faculty or student without result -->
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                    }
+
+                                    @if (role == "Admin")
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    }
+
+                                    @if (canAddResult)
+                                    {
+                                        <a asp-controller="AssignmentResults" asp-action="Create" asp-route-assignmentId="@item.Id" class="btn btn-sm btn-warning">
+                                            <i class="bi bi-plus-circle"></i> Add Results
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}

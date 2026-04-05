@@ -1,0 +1,67 @@
+﻿@model Library.Domain.AssignmentResult
+
+@{
+    ViewData["Title"] = "Details";
+    var role = ViewData["Role"] as string ?? "Unknown";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="card shadow-sm p-3 mb-3">
+        <dl class="row mb-0">
+            <!-- ASSIGNMENT -->
+            <dt class="col-sm-2">Assignment</dt>
+            <dd class="col-sm-10">
+                @if (role == "Faculty" || role == "Admin")
+                {
+                    <a asp-controller="Assignments" asp-action="Details" asp-route-id="@Model.AssignmentId">
+                        @Model.Assignment.Title
+                    </a>
+                }
+                else
+                {
+                    @Model.Assignment.Title
+                }
+            </dd>
+
+            <!-- STUDENT -->
+            <dt class="col-sm-2">Student</dt>
+            <dd class="col-sm-10">
+                @if (role == "Faculty" || role == "Admin")
+                {
+                    <a asp-controller="StudentProfiles" asp-action="Details" asp-route-id="@Model.StudentProfileId">
+                        @Model.StudentProfile.Name
+                    </a>
+                }
+                else
+                {
+                    @Model.StudentProfile.Name
+                }
+            </dd>
+
+            <!-- SCORE -->
+            <dt class="col-sm-2">Score</dt>
+            <dd class="col-sm-10">@Model.Score</dd>
+
+            <!-- FEEDBACK -->
+            <dt class="col-sm-2">Feedback</dt>
+            <dd class="col-sm-10">@Model.Feedback</dd>
+        </dl>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="mb-3">
+        @if (role == "Faculty" || role == "Admin")
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        console.log("Viewing AssignmentResult details for role: '@role'");
+    </script>
+}

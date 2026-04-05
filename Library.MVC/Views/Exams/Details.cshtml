@@ -1,0 +1,55 @@
+﻿@model Library.Domain.Exam
+
+@{
+    ViewData["Title"] = "Details";
+    var examResults = ViewData["ExamResults"] as List<Library.Domain.ExamResult>;
+    var myExamResult = ViewData["MyExamResult"] as Library.Domain.ExamResult;
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Exam</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Title)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Title)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Course)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Course.Name)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Date)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Date)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.MaxScore)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.MaxScore)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.ResultsReleased)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ResultsReleased)</dd>
+    </dl>
+</div>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+{
+    if (examResults != null && examResults.Any())
+    {
+        <h4>Exam Results</h4>
+        <ul>
+            @foreach (var result in examResults)
+            {
+                <li>
+                    <a asp-action="Details" asp-controller="ExamResults" asp-route-id="@result.Id">
+                        @result.StudentProfile?.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+}
+else if (User.IsInRole("Student") && myExamResult != null)
+{
+    <h4>My Exam Result</h4>
+    <a asp-action="Details" asp-controller="ExamResults" asp-route-id="@myExamResult.Id">
+        View My Result
+    </a>
+}
