@@ -1,4 +1,4 @@
-o How to run the app locally
+\## How to run the app locally
 
 1. Clone the repository
 git clone https://github.com/subernaut/oop-s2-1-mvc-83361.git
@@ -18,7 +18,7 @@ cd oop-s2-1-mvc-83361
 3. Run "dotnet ef database update"
 4. Click the "Start" button, or use Ctrl+F5
 
-o How to run tests
+\## How to run tests
 
 Enter the command:
 dotnet test
@@ -28,7 +28,7 @@ Alternative way (If Visual Studio is installed) :
 1. When inside visual studio, go to the "Test" tab in the upper navigation bar,
 2. Click "Run All Tests"
 
-o Seeded Demo Accounts (Admin / Faculty / Student)
+\## Seeded Demo Accounts (Admin / Faculty / Student)
 
 
 
@@ -58,7 +58,7 @@ o Seeded Demo Accounts (Admin / Faculty / Student)
 
 
 
-o Design decisions / assumptions
+\## Design decisions / assumptions
 
 For the accounts creation, I favored utility over realism, as having the same kind of password for all users as well as numbered names (1,2,3...) makes it easier to log into each accounts
 
