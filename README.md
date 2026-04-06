@@ -1,19 +1,19 @@
 o How to run the app locally
 
 1. Clone the repository
-	git clone https://github.com/subernaut/oop-s2-1-mvc-83361.git
-	cd oop-s2-1-mvc-83361
-2. Apply database & run
-	dotnet ef database update
-	dotnet run
+git clone https://github.com/subernaut/oop-s2-1-mvc-83361.git
+cd oop-s2-1-mvc-83361
+2. Apply database \& run
+dotnet ef database update
+dotnet run
 3. Open in browser
-	https://localhost:xxxx
+https://localhost:xxxx
 
 Alternative way (If Visual Studio is installed) :
 
 1. Clone the repository
-	git clone https://github.com/subernaut/oop-s2-1-mvc-83361.git
-	cd oop-s2-1-mvc-83361
+git clone https://github.com/subernaut/oop-s2-1-mvc-83361.git
+cd oop-s2-1-mvc-83361
 2. Open the file oop-s2-1-mvc-83361.sln
 3. Run "dotnet ef database update"
 4. Click the "Start" button, or use Ctrl+F5
@@ -21,28 +21,42 @@ Alternative way (If Visual Studio is installed) :
 o How to run tests
 
 Enter the command:
-	dotnet test
+dotnet test
 
 Alternative way (If Visual Studio is installed) :
 
 1. When inside visual studio, go to the "Test" tab in the upper navigation bar,
 2. Click "Run All Tests"
 
-o Seeded demo accounts (Admin / Faculty / Student)
+o Seeded Demo Accounts (Admin / Faculty / Student)
 
-Role		Email				Password
-Admin		admin@college.com		Admin123!
 
-Faculty		faculty1@college.com		Faculty123!
-Faculty		faculty2@college.com		Faculty123!
-Faculty		faculty3@college.com		Faculty123!
 
-Student		student1@college.com		Student123!
-Student		student2@college.com		Student123!
-Student		student3@college.com		Student123!
-Student		student4@college.com		Student123!
-Student		student5@college.com		Student123!
-Student		student6@college.com		Student123!
+| Role    | Email                    | Password     |
+
+|---------|--------------------------|--------------|
+
+| Admin   | admin@college.com        | Admin123!    |
+
+| Faculty | faculty1@college.com     | Faculty123!  |
+
+| Faculty | faculty2@college.com     | Faculty123!  |
+
+| Faculty | faculty3@college.com     | Faculty123!  |
+
+| Student | student1@college.com     | Student123!  |
+
+| Student | student2@college.com     | Student123!  |
+
+| Student | student3@college.com     | Student123!  |
+
+| Student | student4@college.com     | Student123!  |
+
+| Student | student5@college.com     | Student123!  |
+
+| Student | student6@college.com     | Student123!  |
+
+
 
 o Design decisions / assumptions
 
@@ -57,3 +71,4 @@ Faculty have a limited access to information, can view and create assignments fo
 Admins are able to access everything, as they manage the database (can create/delete/edit and view everything). They have exclusive views into the branches, the users' page, and can view fully the Faculty page (which holds the faculty profiles)
 
 I assumed the "grades" option had to be calculated automatically based on Score/Exam.MaxScore
+
