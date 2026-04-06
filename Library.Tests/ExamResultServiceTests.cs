@@ -8,7 +8,7 @@ namespace Library.Tests
     public class ExamResultServiceTests
     {
         [Fact]
-        public void CreateResult_WithValidData_CreatesSuccessfully()
+        public void CreateResult_WithValidData_ComputesGradeCorrectly()
         {
             var service = new ExamResultService();
             var exam = new Exam { Id = 1, Title = "Math", MaxScore = 100, ResultsReleased = true };
@@ -17,16 +17,36 @@ namespace Library.Tests
 
             Assert.NotNull(result);
             Assert.Equal(80, result.Score);
-            Assert.Equal(80, result.Grade);
-            Assert.Equal(1, result.StudentProfileId);
-            Assert.True(result.Id > 0);
+            Assert.Equal(80, result.Grade); // computed
+        }
+
+        [Fact]
+        public void Grade_IsComputedCorrectly_ForDifferentMaxScore()
+        {
+            var service = new ExamResultService();
+            var exam = new Exam { Id = 1, MaxScore = 200 };
+
+            var result = service.CreateResult(1, 1, 50, exam);
+
+            Assert.Equal(25, result.Grade); // 50 / 200 * 100
+        }
+
+        [Fact]
+        public void Grade_WithZeroMaxScore_ReturnsZero()
+        {
+            var service = new ExamResultService();
+            var exam = new Exam { Id = 1, MaxScore = 0 };
+
+            var result = service.CreateResult(1, 1, 0, exam);
+
+            Assert.Equal(0, result.Grade);
         }
 
         [Fact]
         public void CreateResult_WithScoreAboveMax_ThrowsException()
         {
             var service = new ExamResultService();
-            var exam = new Exam { Id = 1, Title = "Math", MaxScore = 100 };
+            var exam = new Exam { Id = 1, MaxScore = 100 };
 
             Assert.Throws<ArgumentException>(() =>
                 service.CreateResult(1, 1, 150, exam));
@@ -36,7 +56,7 @@ namespace Library.Tests
         public void CreateResult_WithNegativeScore_ThrowsException()
         {
             var service = new ExamResultService();
-            var exam = new Exam { Id = 1, Title = "Math", MaxScore = 100 };
+            var exam = new Exam { Id = 1, MaxScore = 100 };
 
             Assert.Throws<ArgumentException>(() =>
                 service.CreateResult(1, 1, -5, exam));
@@ -46,7 +66,7 @@ namespace Library.Tests
         public void GetResultById_ReturnsCorrectResult()
         {
             var service = new ExamResultService();
-            var exam = new Exam { Id = 1, Title = "Physics", MaxScore = 100 };
+            var exam = new Exam { Id = 1, MaxScore = 100 };
 
             var result = service.CreateResult(1, 2, 70, exam);
             var retrieved = service.GetResultById(result.Id);
@@ -58,7 +78,7 @@ namespace Library.Tests
         public void GetAllResults_ReturnsAllCreatedResults()
         {
             var service = new ExamResultService();
-            var exam = new Exam { Id = 1, Title = "Chemistry", MaxScore = 100 };
+            var exam = new Exam { Id = 1, MaxScore = 100 };
 
             service.CreateResult(1, 1, 60, exam);
             service.CreateResult(1, 2, 90, exam);

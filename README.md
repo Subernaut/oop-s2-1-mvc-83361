@@ -9,6 +9,12 @@ o How to run the app locally
 3. Open in browser
 	https://localhost:xxxx
 
+Alternative way (If Visual Studio is installed) :
+
+1. Clone the repository
+	git clone https://github.com/subernaut/oop-s2-1-mvc-83361.git
+	cd oop-s2-1-mvc-83361
+
 o How to run tests
 
 Enter the command:
@@ -28,5 +34,5 @@ Student		student4@college.com		Student123!
 Student		student5@college.com		Student123!
 Student		student6@college.com		Student123!
 
-o Any design decisions / assumptions
+o Design decisions / assumptions
 

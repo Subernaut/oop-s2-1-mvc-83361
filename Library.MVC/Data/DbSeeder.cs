@@ -259,7 +259,6 @@ public static class DbSeeder
                             ExamId = exam.Id,
                             StudentProfileId = enrol.StudentProfileId,
                             Score = rnd.Next(40, 101),
-                            Grade = 0,
                             EndDate = DateTime.UtcNow
                         };
                         await context.ExamResults.AddAsync(examtmp);

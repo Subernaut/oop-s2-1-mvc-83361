@@ -18,15 +18,12 @@ namespace Library.MVC.Services
             if (score < 0 || score > exam.MaxScore)
                 throw new ArgumentException("Score must be within valid range.");
 
-            var grade = CalculateGrade(score, exam.MaxScore);
-
             var result = new ExamResult
             {
                 Id = _nextId++,
                 ExamId = examId,
                 StudentProfileId = studentId,
                 Score = score,
-                Grade = grade,
                 Exam = exam,
                 EndDate = DateTime.Now
             };

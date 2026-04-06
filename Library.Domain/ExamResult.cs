@@ -14,7 +14,16 @@ namespace Library.Domain
         public int ExamId { get; set; }
         public Exam? Exam { get; set; }
         public double Score { get; set; }
-        public double Grade { get; set; }
+        public double Grade
+        {
+            get
+            {
+                if (Exam == null || Exam.MaxScore == 0)
+                    return 0;
+
+                return (Score / Exam.MaxScore) * 100;
+            }
+        }
         public DateTime EndDate { get; set; }
     }
 }
