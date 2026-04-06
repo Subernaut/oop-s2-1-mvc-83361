@@ -38,23 +38,23 @@ Role Email Password
 
 Admin admin@college.com Admin123!
 
-Faculty faculty1@college.com Faculty123!
+Faculty     faculty1@college.com Faculty123!
 
-Faculty faculty2@college.com Faculty123!
+Faculty     faculty2@college.com Faculty123!
 
-Faculty faculty3@college.com Faculty123!
+Faculty     faculty3@college.com Faculty123!
 
-Student student1@college.com Student123!
+Student     student1@college.com Student123!
 
-Student student2@college.com Student123!
+Student     student2@college.com Student123!
 
-Student student3@college.com Student123!
+Student     student3@college.com Student123!
 
-Student student4@college.com Student123!
+Student     student4@college.com Student123!
 
-Student student5@college.com Student123!
+Student     student5@college.com Student123!
 
-Student student6@college.com Student123!
+Student     student6@college.com Student123!
 
 
 
