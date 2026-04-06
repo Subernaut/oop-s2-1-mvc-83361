@@ -1,42 +1,47 @@
 ﻿@model Library.Domain.AttendanceRecord
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Attendance Record";
 }
 
-<h1>Create</h1>
+<h1 class="mb-4"><i class="bi bi-journal-plus"></i> Create Attendance Record</h1>
 
-<h4>AttendanceRecord</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CourseEnrolmentId" class="control-label"></label>
-                <select asp-for="CourseEnrolmentId" class ="form-control" asp-items="ViewBag.CourseEnrolmentId"></select>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Course Enrolment -->
+            <div class="mb-3">
+                <label asp-for="CourseEnrolmentId" class="form-label"><i class="bi bi-book"></i> Course Enrolment</label>
+                <select asp-for="CourseEnrolmentId" class="form-select" asp-items="ViewBag.CourseEnrolmentId"></select>
+                <span asp-validation-for="CourseEnrolmentId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+
+            <!-- Date -->
+            <div class="mb-3">
+                <label asp-for="Date" class="form-label"><i class="bi bi-calendar-event"></i> Date</label>
+                <input asp-for="Date" class="form-control" type="date" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Present" /> @Html.DisplayNameFor(model => model.Present)
-                </label>
+
+            <!-- Present -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="Present" />
+                <label class="form-check-label" asp-for="Present"><i class="bi bi-check-circle"></i> Present</label>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <!-- Actions -->
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Create
+                </button>
+                <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 }

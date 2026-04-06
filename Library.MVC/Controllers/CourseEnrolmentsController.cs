@@ -96,6 +96,22 @@ namespace Library.MVC.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,StudentProfileId,CourseId,EnrolDate,Status")] CourseEnrolment courseEnrolment)
         {
+            if (courseEnrolment.StudentProfileId == null || courseEnrolment.CourseId == null)
+            {
+                ModelState.AddModelError("", "Student and Course must be selected.");
+            }
+
+            // 🚨 Prevent duplicate enrolment
+            bool exists = await _context.CourseEnrolments
+                .AnyAsync(e =>
+                    e.StudentProfileId == courseEnrolment.StudentProfileId &&
+                    e.CourseId == courseEnrolment.CourseId);
+
+            if (exists)
+            {
+                ModelState.AddModelError("", "This student is already enrolled in this course.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(courseEnrolment);
@@ -130,6 +146,24 @@ namespace Library.MVC.Controllers
         {
             if (id != courseEnrolment.Id) return NotFound();
 
+            var existing = await _context.CourseEnrolments
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (existing == null) return NotFound();
+
+            // 🚨 Prevent duplicate if course changed
+            bool exists = await _context.CourseEnrolments
+                .AnyAsync(e =>
+                    e.StudentProfileId == courseEnrolment.StudentProfileId &&
+                    e.CourseId == courseEnrolment.CourseId &&
+                    e.Id != courseEnrolment.Id);
+
+            if (exists)
+            {
+                ModelState.AddModelError("", "This student is already enrolled in this course.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -139,9 +173,12 @@ namespace Library.MVC.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CourseEnrolmentExists(courseEnrolment.Id)) return NotFound();
-                    else throw;
+                    if (!CourseEnrolmentExists(courseEnrolment.Id))
+                        return NotFound();
+                    else
+                        throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 

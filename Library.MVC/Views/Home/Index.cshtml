@@ -1,8 +1,92 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Acme Global College";
+
+    var isLoggedIn = SignInManager.IsSignedIn(User);
+
+    // ---------- Logged-in user cards ----------
+    var currentUser = UserManager.GetUserAsync(User).Result;
+    var isAdmin = User.IsInRole("Admin");
+    var isFaculty = User.IsInRole("Faculty");
+    var isStudent = User.IsInRole("Student");
+    var cards = new[]
+        {
+            new {
+                Title = isStudent ? "My Profile" : isFaculty ? "My Students" : "Users",
+                Description = isStudent ? "View and edit your student profile and personal details."
+                            : isFaculty ? "View the students you are assigned to teach and manage."
+                            : "Manage all user accounts including students, faculty, and admins.",
+                Controller = isAdmin ? "Users" : "StudentProfiles",
+                Action = "Index",
+                ButtonText = isStudent ? "Go to My Profile" : isFaculty ? "View My Students" : "Manage Users",
+                ColorClass = "primary",
+                Icon = "bi-person-circle"
+            },
+            new {
+                Title = isStudent ? "My Gradebook" : isFaculty ? "Student Gradebook" : "Exam Results",
+                Description = isStudent ? "View your assignment scores and academic progress."
+                            : isFaculty ? "Manage and view assignments and results for your students."
+                            : "Access all exam results and manage student performance records.",
+                Controller = isAdmin ? "ExamResults" : "AssignmentResults",
+                Action = "Index",
+                ButtonText = isStudent ? "View My Gradebook" : isFaculty ? "View Student Gradebook" : "View Exam Results",
+                ColorClass = "success",
+                Icon = "bi-journal-text"
+            },
+            new {
+                Title = isStudent ? "My Exam Results" : isFaculty ? "My Courses" : "Exams",
+                Description = isStudent ? "View your exam scores for all enrolled courses."
+                            : isFaculty ? "View and manage your assigned courses and their schedules."
+                            : "Manage exams and track performance across all courses.",
+                Controller = isAdmin ? "Exams" : isFaculty ? "Courses" : "ExamResults",
+                Action = "Index",
+                ButtonText = isStudent ? "View My Exam Results" : isFaculty ? "View My Courses" : "Manage Exams",
+                ColorClass = "warning",
+                Icon = "bi-clipboard2-check-fill"
+            }
+        };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    @if (isLoggedIn)
+    {
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-bold text-primary"><i class="bi bi-building"></i> Acme Global College</h1>
+            <p class="lead text-secondary">Multi-Branch Student & Course Management System</p>
+            <hr class="my-4" />
+            <p>Welcome, @User.Identity.Name! Below are quick links based on your role in the system.</p>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var card in cards)
+            {
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi @card.Icon display-4 text-@card.ColorClass mb-3"></i>
+                            <h5 class="card-title">@card.Title</h5>
+                            <p class="card-text">@card.Description</p>
+                            <a class="btn btn-@card.ColorClass" asp-controller="@card.Controller" asp-action="@card.Action">@card.ButtonText</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <h1 class="display-3 fw-bold text-primary"><i class="bi bi-building"></i> Acme Global College</h1>
+            <p class="lead text-secondary mb-4">Welcome to the Multi-Branch Student & Course Management System.</p>
+            <p class="mb-4">This web application allows students, faculty, and administrators to manage courses, track academic progress, and maintain student records across all college branches.</p>
+            <a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Login">Login to Get Started</a>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}

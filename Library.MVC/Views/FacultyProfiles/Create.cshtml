@@ -1,47 +1,53 @@
 ﻿@model Library.Domain.FacultyProfile
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Faculty Profile";
 }
 
-<h1>Create</h1>
+<h1 class="mb-4"><i class="bi bi-person-badge-fill"></i> Create Faculty Profile</h1>
 
-<h4>FacultyProfile</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdentityUserId" class="control-label"></label>
-                <select asp-for="IdentityUserId" class ="form-control" asp-items="ViewBag.IdentityUserId"></select>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <!-- User -->
+            <div class="mb-3">
+                <label asp-for="IdentityUserId" class="form-label"><i class="bi bi-person"></i> User</label>
+                <select asp-for="IdentityUserId" class="form-select" asp-items="ViewBag.IdentityUserId"></select>
+                <span asp-validation-for="IdentityUserId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"><i class="bi bi-person-lines-fill"></i> Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter full name" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
+
+            <!-- Phone -->
+            <div class="mb-3">
+                <label asp-for="Phone" class="form-label"><i class="bi bi-telephone"></i> Phone</label>
+                <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <!-- Actions -->
+            <div class="d-flex gap-2 mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 }

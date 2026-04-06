@@ -4,104 +4,57 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Student Profile Details";
     var currentUser = UserManager.GetUserAsync(User).Result;
     var isAdmin = User.IsInRole("Admin");
     var isFaculty = User.IsInRole("Faculty");
     var isStudent = User.IsInRole("Student") && currentUser.Id == Model.IdentityUserId;
 }
 
-<h1>Details</h1>
+<h1 class="mb-4"><i class="bi bi-mortarboard"></i> Student Profile Details</h1>
 
-<div>
-    <h4>StudentProfile</h4>
-    <hr />
-    <dl class="row">
-        @* Student and Admin can see everything *@
-        @if (isAdmin)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Student)
-            </dt>
-            <dd class="col-sm-10">
-            <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.Student.Id">
-                @Model.Student.Id
-            </a>
-            </dd>
-        }
-        @if (isAdmin || isStudent)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            @if (isAdmin)
+            {
+                <dt class="col-sm-3 fw-bold">User</dt>
+                <dd class="col-sm-9">
+                    <a asp-controller="Users" asp-action="Details" asp-route-id="@Model.Student.Id">
+                        @Model.Student.Id
+                    </a>
+                </dd>
+            }
 
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Email)
-            </dd>
+            @if (isAdmin || isStudent || isFaculty)
+            {
+                <dt class="col-sm-3 fw-bold">Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(m => m.Name)</dd>
 
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Phone)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Phone)
-            </dd>
+                <dt class="col-sm-3 fw-bold">Email</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(m => m.Email)</dd>
 
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Address)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Address)
-            </dd>
+                <dt class="col-sm-3 fw-bold">Phone</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(m => m.Phone)</dd>
 
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StudentNumber)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StudentNumber)
-            </dd>
-        }
-        @* Faculty sees limited info only *@
-        else if (isFaculty)
-        {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
+                <dt class="col-sm-3 fw-bold">Address</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(m => m.Address)</dd>
 
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Email)
-            </dd>
-
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StudentNumber)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StudentNumber)
-            </dd>
-        }
-    </dl>
+                <dt class="col-sm-3 fw-bold">Student Number</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(m => m.StudentNumber)</dd>
+            }
+        </dl>
+    </div>
 </div>
 
-<div>
-    @* Only Admin can edit *@
+<div class="d-flex gap-2">
     @if (isAdmin)
     {
-        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
-        <span>|</span>
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
     }
-    @if (!isStudent)
-    {
-        <a asp-action="Index">Back to List</a>
-    }
+    <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}

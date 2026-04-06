@@ -1,22 +1,25 @@
 ﻿@model Library.Domain.AssignmentResult
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Assignment Result Details";
     var role = ViewData["Role"] as string ?? "Unknown";
 }
 
-<div class="container mt-4">
-    <h2>@ViewData["Title"]</h2>
+<h1 class="mb-4"><i class="bi bi-journal-check"></i> @ViewData["Title"]</h1>
 
-    <div class="card shadow-sm p-3 mb-3">
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">@Model.Assignment.Title for @Model.StudentProfile.Name</h5>
+        <small class="badge bg-light text-dark">@role</small>
+    </div>
+    <div class="card-body">
         <dl class="row mb-0">
-            <!-- ASSIGNMENT -->
-            <dt class="col-sm-2">Assignment</dt>
-            <dd class="col-sm-10">
+            <dt class="col-sm-3 fw-bold"><i class="bi bi-journal-text"></i> Assignment</dt>
+            <dd class="col-sm-9">
                 @if (role == "Faculty" || role == "Admin")
                 {
-                    <a asp-controller="Assignments" asp-action="Details" asp-route-id="@Model.AssignmentId">
-                        @Model.Assignment.Title
+                    <a asp-controller="Assignments" asp-action="Details" asp-route-id="@Model.AssignmentId" class="btn btn-sm btn-outline-primary">
+                        View Assignment
                     </a>
                 }
                 else
@@ -25,13 +28,12 @@
                 }
             </dd>
 
-            <!-- STUDENT -->
-            <dt class="col-sm-2">Student</dt>
-            <dd class="col-sm-10">
+            <dt class="col-sm-3 fw-bold"><i class="bi bi-person"></i> Student</dt>
+            <dd class="col-sm-9">
                 @if (role == "Faculty" || role == "Admin")
                 {
-                    <a asp-controller="StudentProfiles" asp-action="Details" asp-route-id="@Model.StudentProfileId">
-                        @Model.StudentProfile.Name
+                    <a asp-controller="StudentProfiles" asp-action="Details" asp-route-id="@Model.StudentProfileId" class="btn btn-sm btn-outline-info">
+                        View Student
                     </a>
                 }
                 else
@@ -40,28 +42,27 @@
                 }
             </dd>
 
-            <!-- SCORE -->
-            <dt class="col-sm-2">Score</dt>
-            <dd class="col-sm-10">@Model.Score</dd>
+            <dt class="col-sm-3 fw-bold"><i class="bi bi-bar-chart-line"></i> Score</dt>
+            <dd class="col-sm-9">@Model.Score</dd>
 
-            <!-- FEEDBACK -->
-            <dt class="col-sm-2">Feedback</dt>
-            <dd class="col-sm-10">@Model.Feedback</dd>
+            <dt class="col-sm-3 fw-bold"><i class="bi bi-chat-left-text"></i> Feedback</dt>
+            <dd class="col-sm-9">@Model.Feedback</dd>
         </dl>
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="mb-3">
-        @if (role == "Faculty" || role == "Admin")
-        {
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-        }
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>
 
+<div class="d-flex gap-2">
+    @if (role == "Faculty" || role == "Admin")
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning text-dark">
+            <i class="bi bi-pencil-square"></i> Edit
+        </a>
+    }
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
+</div>
+
 @section Scripts {
-    <script>
-        console.log("Viewing AssignmentResult details for role: '@role'");
-    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 }

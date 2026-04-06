@@ -1,35 +1,29 @@
 ﻿@model IEnumerable<Library.Domain.CourseEnrolment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Course Enrolments";
     var isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Course Enrolments</h1>
+<h1 class="mb-4"><i class="bi bi-journal-check"></i> Course Enrolments</h1>
 
 @if (isAdmin)
 {
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Create New Enrolment
+        </a>
+    </div>
 }
 
-<table class="table">
-    <thead>
+<table class="table table-hover table-bordered shadow-sm">
+    <thead class="table-dark">
         <tr>
-            <th>
-                Student
-            </th>
-            <th>
-                Course
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EnrolDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Enrol Date</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -38,33 +32,35 @@
             <tr>
                 <td>
                     <a asp-controller="StudentProfiles" asp-action="Details" asp-route-id="@item.StudentProfileId">
-                        @Html.DisplayFor(modelItem => item.StudentProfile.Name)
+                        @item.StudentProfile.Name
                     </a>
                 </td>
                 <td>
                     <a asp-controller="Courses" asp-action="Details" asp-route-id="@item.CourseId">
-                        @Html.DisplayFor(modelItem => item.Course.Name)
+                        @item.Course.Name
                     </a>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EnrolDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
+                <td>@item.EnrolDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.Status</td>
+                <td class="text-center">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info me-1">
+                        <i class="bi bi-eye"></i> Details
+                    </a>
                     @if (isAdmin)
                     {
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span>|</span>
-                        <a asp-action= "Details" asp - route - id = "@item.Id" > Details </a > <span>|</span>
-                        <a asp-action= "Delete" asp - route - id = "@item.Id" > Delete </a >
-                    }
-                    else
-                    {
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning text-dark me-1">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
                     }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+}
