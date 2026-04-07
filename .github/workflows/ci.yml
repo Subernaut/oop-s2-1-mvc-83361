@@ -1,33 +1,71 @@
-name: ci
+name: Test & Publish Coverage
+
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-test:
+  build-test-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
 
-      - name: Restore
+      - name: Restore Dependencies
         run: dotnet restore
 
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test with coverage
-        run: dotnet test --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage.xml
+      - name: Run xUnit Tests & Collect Coverage
+        run: |
+          dotnet test Library.Tests/Library.Tests.csproj \
+            --configuration Release \
+            --no-build \
+            --logger "trx;LogFileName=test-results.trx" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults
 
-      - name: Publish code coverage
-        uses: codecov/codecov-action@v3
+      - name: Install ReportGenerator
+        run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+      - name: Generate Coverage Report
+        run: |
+          reportgenerator \
+            -reports:"./TestResults/**/coverage.cobertura.xml" \
+            -targetdir:"./coveragereport" \
+            -reporttypes:"Html;Cobertura;JsonSummary" \
+            -classfilters:"-*.Migrations.*,-*Program,-*.Views.*"
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
         with:
-          files: TestResults/coverage.xml
-          fail_ci_if_error: true
+          name: test-results
+          path: ./TestResults
+          retention-days: 30
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./coveragereport
+          retention-days: 30
+
+      - name: Deploy Coverage Report to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./coveragereport
+          force_orphan: true
