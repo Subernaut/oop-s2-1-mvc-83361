@@ -1,5 +1,4 @@
 name: ci
-
 on:
   push:
     branches: [ "main" ]
@@ -9,7 +8,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,5 +23,11 @@ jobs:
       - name: Build (Release)
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
+      - name: Test with coverage
+        run: dotnet test --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage.xml
+
+      - name: Publish code coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: TestResults/coverage.xml
+          fail_ci_if_error: true
