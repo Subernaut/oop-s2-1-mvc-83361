@@ -69,3 +69,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./coveragereport
           force_orphan: true
+          user_name: "Subernaut"
+          user_email: "subernaut@example.com"
+          commit_message: "Deploy coverage report to GitHub Pages"
